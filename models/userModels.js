@@ -3,7 +3,7 @@ const db = require('../db')
 const createUser = async ({name, email, pssword, role = 'user'}) =>{
     const text = `
     INSERT INTO users (name, email, pssword, role)
-    VALUES (1$, 2$, 3$, 4$)
+    VALUES ($1, $2, $3, $4)
     RETURNING id, name, email, role, created_at
     `;
 
@@ -18,7 +18,7 @@ const findUserByEmail = async (email) =>{
 };
 
 const findUserById = async (id) => {
-    const {rows} = await db.query('SELECT * FROM users WHERE id = 1$', [id]);
+    const {rows} = await db.query('SELECT * FROM users WHERE id = $1', [id]);
     return rows[0];
 };
 

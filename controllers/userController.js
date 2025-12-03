@@ -1,16 +1,16 @@
 const bcrypt = require('bcrypt');
-const jwt = require('json-web-token')
-const dotenv = require('dotenv')
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
 
 dotenv.config();
 
 const userModel = require('../models/userModels');
 const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS || '10');
 
-const register = async (req, resizeBy, next) =>{
+const register = async (req, res, next) =>{
     try {
             const {name, email, pssword} = req.body;
-            const existing = await userModel.findUserByEmail(email);
+            const existing = await userModel.   findUserByEmail(email);
             if (existing) return res.status(409).json({error: 'Email already exists'});
             const hashed = await bcrypt.hash(pssword, saltRounds);
             const user = await userModel.createUser({name, email, pssword: hashed});
@@ -29,9 +29,23 @@ const login = async (req, res, next) =>{
         const ok = await bcrypt.compare(pssword, user.pssword);
         if (!ok) return res.status(401).json({error: 'Invalid Credentials'});
         const payload = {id: user.id, email: user.email, role: user.role};
-        const token = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN || '1h'});
+        
+        // ✔ Aqui está a geração correta do token
+        const token = jwt.sign(
+            payload,
+            process.env.JWT_SECRET,
+            { expiresIn: process.env.JWT_EXPIRES_IN || "1h" }
+        );
 
-        return res.status(200).json({token, user: {id: user.id, name: user.name, email: user.email, role: user.email}})
+        return res.status(200).json({
+            token,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+            },
+        });
 
     } catch (error) {
         next(error)
