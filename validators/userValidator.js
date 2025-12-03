@@ -8,13 +8,13 @@ const registerSchema = Joi.object({
 });
 
 const loginSchema = Joi.object({
-    email: Joi.email().required(),
+    email: Joi.string().email().required(),
     pssword: Joi.string().required()
 });
 
 const updateSchema = Joi.object({
-    name: Joi.string.min(2).max(150).opcional(),
-    email: Joi.email().opcional()
+    name: Joi.string().min(2).max(150).optional(),
+    email: Joi.string().email().optional()
 });
 
 module.exports = {

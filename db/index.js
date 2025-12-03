@@ -1,6 +1,7 @@
 const {Pool, Query} = require('pg')
-const dotenv = require('../.env');
+const dotenv = require('dotenv');
 const { text } = require('express');
+
 dotenv.config();
 
 const pool = new Pool({
